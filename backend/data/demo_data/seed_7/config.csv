@@ -1,0 +1,2 @@
+shortage_penalty_factor,holding_cost_rate,horizon,baseline_safety_days,scenario_weight_low,scenario_weight_mid,scenario_weight_high
+1.5,0.02,7,2,0.3,0.4,0.3

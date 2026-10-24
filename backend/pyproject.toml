@@ -1,0 +1,15 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+# Suppress starlette/httpx deprecation warnings during testing
+filterwarnings = [
+    "ignore::DeprecationWarning:starlette",
+    "ignore::DeprecationWarning:httpx",
+]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"

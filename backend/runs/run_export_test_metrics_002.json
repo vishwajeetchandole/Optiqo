@@ -1,0 +1,25 @@
+{
+  "run_id": "run_export_test_metrics_002",
+  "run_type": "PLAN",
+  "origin_date": "2024-01-15",
+  "dataset_hash": "hash456",
+  "status": "OK",
+  "summary": {
+    "expected_unmet_demand_before": 120.0,
+    "expected_unmet_demand_after": 15.0
+  },
+  "kpi_comparison": {
+    "unmet_demand_rate_k1": {
+      "b1": 0.05,
+      "optiqo": 0.02
+    }
+  },
+  "software_versions": {
+    "optiqo": "0.1.0",
+    "python": "3.10.11",
+    "platform": "Windows-10-10.0.26300-SP0",
+    "pandas": "2.2.3",
+    "pulp": "2.9.0",
+    "lightgbm": "4.3.0"
+  }
+}

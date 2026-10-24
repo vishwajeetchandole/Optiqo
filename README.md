@@ -1,58 +1,71 @@
-# StockWise AI (Optiqo) — Frontend
+# Optiqo
 
-> **VYROX SGU HACKATHON**  
-> StockWise AI is a decision-support system for FMCG supply chains. It targets Supply Chain Managers, Demand Planners, and Warehouse Managers who struggle with uneven stock levels, stockouts, and high transport costs.
+Optiqo is an AI-powered distribution intelligence and inventory optimization platform for FMCG and distribution teams. It combines demand forecasting, risk analysis, allocation planning, and simulation-backed evaluation into a single workflow.
 
-This repository branch (`front`) contains the React + Vite frontend for Optiqo / StockWise AI.
+## Architecture
 
----
+- `frontend/` — React + Vite + Tailwind dashboard and user flows
+- `backend/` — FastAPI REST API, validation, orchestration, simulation, and persistence
+- `aiml/` — forecasting, optimization, verification, benchmarking, and evaluation logic
+- `docs/` — shared API contract and data schema documentation
 
-## 🚀 Quickstart & Setup
+The intended runtime flow is:
 
-### Prerequisites
-- Node.js >= 18.0.0
-- npm >= 9.0.0
+React frontend -> FastAPI API -> validation/orchestration -> demo data / dataset pipeline -> forecasting and optimization -> risk and backtest evaluation -> UI response
 
-### Installation & Run
-```bash
-# Install dependencies
+## Quick start
+
+### 1) Frontend
+
+```powershell
+cd frontend
 npm install
-
-# Start local development server
+cp .env.example .env.local
 npm run dev
-
-# Run unit / integration tests
-npm run test
-
-# Build for production
-npm run build
-
-# Run linter
-npm run lint
 ```
 
----
+The default frontend env is configured for the local backend at `http://localhost:8000/api` with mock responses disabled by default.
 
-## ⚙️ Environment Configuration
+### 2) Backend
 
-Copy `.env.example` to `.env.local` to configure:
-
-```env
-# Base URL for the backend REST API
-VITE_API_BASE_URL=http://localhost:8000/api/v1
-
-# Enable mock data when backend is not running
-VITE_USE_MOCKS=true
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+$env:PYTHONPATH = "C:\Users\vishw\Downloads\Optiqo"
+python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
----
+### 3) AI/ML module
 
-## 🗺️ Key Features & Routes
+```powershell
+cd aiml
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m pytest tests -q
+```
 
-- **Live Dashboard (`/`)**: Real-time KPI summaries, forecast trends, network risk distribution, and critical alerts.
-- **Data Pre-flight Validation (`/validation`)**: Automated checks, input data sanity checks, and issue inspection drawer.
-- **Network Risk Analysis (`/risk`)**: Ranked SKU-destination pairs, inventory stockout likelihood, and quantitative risk drivers.
-- **Optimal Distribution Plan (`/plan`, `/plan/:lineId`)**: Transfer recommendations, constraint simulation, line detail inspection, and CSV exports.
-- **Historical Backtesting (`/backtest`)**: K1–K8 KPI evaluation, gain decomposition, and trajectory stress-testing.
-- **Solver Run Inspector (`/runs`)**: Execution logs, run comparisons, and downloadable manifests.
+## API health check
 
+```powershell
+Invoke-RestMethod http://localhost:8000/api/health
+```
+
+## Key API routes
+
+- `GET /api/health`
+- `GET /api/demo-data`
+- `POST /api/data/validate`
+- `POST /api/forecast`
+- `POST /api/plan`
+- `GET /api/risk`
+- `POST /api/backtest`
+- `GET /api/runs`
+
+## Notes
+
+- Use synthetic demo data unless a real dataset is intentionally loaded.
+- The app is a decision-support tool; it does not execute warehouse actions.
+- Data validation, solver feasibility, and independent verification are treated as required gates before recommendations are shown.

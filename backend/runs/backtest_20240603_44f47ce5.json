@@ -1,0 +1,106 @@
+{
+  "run_id": "backtest_20240603_44f47ce5",
+  "run_type": "BACKTEST",
+  "origin_date": "2024-06-03",
+  "seed": 42,
+  "dataset_hash": "3e55e124be27a000",
+  "parameters": {
+    "evaluation_start_date": "2024-06-03",
+    "window_days": 14,
+    "dispatch_cycles": 2,
+    "policies": [
+      "B1",
+      "B2",
+      "OPTIQO"
+    ],
+    "baseline_safety_days": 2
+  },
+  "status": "COMPLETED",
+  "summary": {
+    "window_days": 14,
+    "dispatch_cycles": 2
+  },
+  "kpi_comparison": {
+    "unmet_demand_rate_k1": {
+      "b1": 0.02,
+      "b2": 0.009,
+      "optiqo": 0.0,
+      "target_met_vs_b1": true,
+      "relative_reduction_vs_b1_pct": 100.0,
+      "relative_reduction_vs_b2_pct": 100.0
+    },
+    "fill_rate_k2": {
+      "b1": 0.98,
+      "b2": 0.991,
+      "optiqo": 1.0,
+      "target_met": true
+    },
+    "stockout_days_rate_k3": {
+      "b1": 0.046,
+      "b2": 0.021,
+      "optiqo": 0.001,
+      "relative_reduction_vs_b1_pct": 97.8
+    },
+    "expiry_wastage_units_k4": {
+      "b1": 0.0,
+      "b2": 0.0,
+      "optiqo": 0.0,
+      "relative_reduction_vs_b1_pct": 0.0
+    },
+    "total_freight_cost_k5": {
+      "b1": 164.2,
+      "b2": 201.9,
+      "optiqo": 0.0,
+      "per_unit_b1": 0.0,
+      "per_unit_optiqo": 0.0,
+      "relative_reduction_per_unit_pct": 0.0
+    },
+    "total_modeled_cost_k6": {
+      "b1": 195398.6,
+      "b2": 137885.2,
+      "optiqo": 87670.8,
+      "relative_reduction_vs_b1_pct": 55.1
+    },
+    "ending_inventory_units_k7": {
+      "b1": 1479475.0,
+      "b2": 1476020.0,
+      "optiqo": 1473108.0,
+      "percentage_above_b1": -0.4
+    },
+    "gain_decomposition_k8": {
+      "unmet_demand_rate": {
+        "forecast_effect_b1_to_b2": -0.011,
+        "allocation_effect_b2_to_optiqo": -0.009
+      },
+      "total_modeled_cost": {
+        "forecast_effect_b1_to_b2": -57513.4,
+        "allocation_effect_b2_to_optiqo": -50214.4
+      }
+    }
+  },
+  "forecast_kpis": {
+    "daily_wape_f1": 0.435,
+    "weekly_wape_f2": 0.295,
+    "bias_f4": 0.262,
+    "interval_coverage_f5": 0.32
+  },
+  "optimization_kpis": {
+    "constraint_violations_o1": 0,
+    "feasible_plan_rate_o2": 1.0,
+    "grounded_explanations_rate_o3": 1.0,
+    "p95_solver_runtime_seconds_o4": 19.52,
+    "supply_bound_shortage_o5": 150.0
+  },
+  "available_artifacts": [
+    "kpis",
+    "risks"
+  ],
+  "software_versions": {
+    "optiqo": "0.1.0",
+    "python": "3.10.11",
+    "platform": "Windows-10-10.0.26300-SP0",
+    "pandas": "2.2.3",
+    "pulp": "2.9.0",
+    "lightgbm": "4.3.0"
+  }
+}

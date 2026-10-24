@@ -1,0 +1,5 @@
+warehouse_id,name,region,capacity
+WH_01,Warehouse 1 (North),North,9445.0
+WH_02,Warehouse 2 (South),South,10212.0
+WH_03,Warehouse 3 (East),East,10807.0
+WH_04,Warehouse 4 (West),West,9116.0

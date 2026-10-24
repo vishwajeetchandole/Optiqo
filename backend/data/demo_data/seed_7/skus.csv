@@ -1,0 +1,31 @@
+sku_id,name,category,shelf_life_days,min_life_days,unit_volume,unit_cost,unit_margin,case_size
+SKU_001,Beverages SKU 1,Beverages,189,45,0.018,117.47,22.91,6
+SKU_002,Beverages SKU 2,Beverages,206,45,0.0011,124.08,38.39,6
+SKU_003,Beverages SKU 3,Beverages,177,45,0.0068,45.37,9.12,24
+SKU_004,Beverages SKU 4,Beverages,180,45,0.0115,149.35,46.08,12
+SKU_005,Beverages SKU 5,Beverages,188,45,0.0198,36.22,6.59,24
+SKU_006,Beverages SKU 6,Beverages,147,45,0.0017,79.66,19.38,12
+SKU_007,Snacks SKU 1,Snacks,105,37,0.013,79.55,19.84,12
+SKU_008,Snacks SKU 2,Snacks,72,26,0.0047,105.34,20.03,6
+SKU_009,Snacks SKU 3,Snacks,85,30,0.0011,125.36,22.68,12
+SKU_010,Snacks SKU 4,Snacks,103,37,0.0107,127.84,35.53,6
+SKU_011,Snacks SKU 5,Snacks,98,35,0.0027,83.47,21.0,12
+SKU_012,Snacks SKU 6,Snacks,85,30,0.0124,13.59,3.09,24
+SKU_013,Dairy SKU 1,Dairy,19,7,0.0039,123.37,27.87,12
+SKU_014,Dairy SKU 2,Dairy,21,8,0.0125,97.51,27.82,24
+SKU_015,Dairy SKU 3,Dairy,18,7,0.0094,39.74,9.16,24
+SKU_016,Dairy SKU 4,Dairy,24,9,0.0051,102.41,21.51,6
+SKU_017,Dairy SKU 5,Dairy,24,9,0.0136,24.08,7.68,12
+SKU_018,Dairy SKU 6,Dairy,24,9,0.0118,26.09,4.92,24
+SKU_019,Personal Care SKU 1,Personal Care,427,45,0.0115,31.18,10.19,24
+SKU_020,Personal Care SKU 2,Personal Care,375,45,0.0081,64.59,12.78,12
+SKU_021,Personal Care SKU 3,Personal Care,297,45,0.0176,72.82,18.9,12
+SKU_022,Personal Care SKU 4,Personal Care,401,45,0.0015,58.97,9.2,6
+SKU_023,Personal Care SKU 5,Personal Care,309,45,0.0194,100.38,23.65,6
+SKU_024,Personal Care SKU 6,Personal Care,419,45,0.0075,90.59,25.98,12
+SKU_025,Household SKU 1,Household,254,45,0.0109,115.96,38.48,24
+SKU_026,Household SKU 2,Household,316,45,0.0011,114.18,35.64,6
+SKU_027,Household SKU 3,Household,230,45,0.009,123.21,18.83,24
+SKU_028,Household SKU 4,Household,301,45,0.0107,110.25,21.53,12
+SKU_029,Household SKU 5,Household,237,45,0.0079,31.01,6.8,6
+SKU_030,Household SKU 6,Household,277,45,0.0075,44.37,15.1,24
