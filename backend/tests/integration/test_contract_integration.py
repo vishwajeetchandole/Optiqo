@@ -213,15 +213,15 @@ class TestFullContractIntegration:
 
     def test_cors_preflight_headers(self, api_client: TestClient):
         """Test CORS OPTIONS preflight request returns Access-Control headers."""
-        headers = {
-            "Origin": "http://localhost:5173",
-            "Access-Control-Request-Method": "POST",
-            "Access-Control-Request-Headers": "Content-Type",
-        }
-        resp = api_client.options("/api/plan", headers=headers)
-        assert resp.status_code == 200
-        assert "access-control-allow-origin" in resp.headers
-        assert resp.headers["access-control-allow-origin"] in ("*", "http://localhost:5173")
+        for origin in ("http://localhost:5173", "http://127.0.0.1:5174"):
+            headers = {
+                "Origin": origin,
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "Content-Type",
+            }
+            resp = api_client.options("/api/plan", headers=headers)
+            assert resp.status_code == 200
+            assert resp.headers.get("access-control-allow-origin") == origin
 
     # ── RFC 7807 Problem Details ─────────────────────────────────────────────
 

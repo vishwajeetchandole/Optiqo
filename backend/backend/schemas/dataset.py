@@ -223,3 +223,59 @@ class ConfigRecord(BaseModel):
             )
 
         return self
+
+
+class DatasetValidationIssue(BaseModel):
+    """One issue found while validating a user-uploaded dataset."""
+
+    level: str = Field(description="Issue severity: error, warning, or info.")
+    code: str = Field(description="Machine readable validation code.")
+    message: str = Field(description="Human readable issue description.")
+    row_index: Optional[int] = Field(default=None, description="Zero-based row index, when applicable.")
+    column: Optional[str] = Field(default=None, description="Column name involved, when applicable.")
+
+
+class DatasetValidationReport(BaseModel):
+    """Validation result for dataset inspection or upload validation."""
+
+    status: str = Field(description="VALID | WARNINGS_ONLY | INVALID")
+    valid: bool = Field(description="True when the dataset passed validation without blocking errors.")
+    issue_count: int = Field(description="Total number of issues reported.")
+    errors: int = Field(description="Number of blocking errors.")
+    warnings: int = Field(description="Number of warnings.")
+    issues: list[DatasetValidationIssue] = Field(default_factory=list)
+
+
+class DatasetMetadata(BaseModel):
+    """Metadata describing an uploaded dataset snapshot."""
+
+    dataset_id: str = Field(description="Stable ID for the dataset in the upload registry.")
+    name: str = Field(description="Friendly dataset name.")
+    original_name: str = Field(description="Filename received from the client.")
+    file_size_bytes: int = Field(description="Original file size in bytes.")
+    row_count: int = Field(description="Total rows in the dataset file.")
+    column_count: int = Field(description="Number of columns detected in the uploaded file.")
+    columns: list[str] = Field(default_factory=list, description="Column names detected in the file.")
+    source_type: str = Field(description="File type, such as csv or excel.")
+    status: str = Field(default="READY", description="Dataset lifecycle status.")
+    validation_status: str = Field(default="VALID", description="Validation status.")
+    active: bool = Field(default=False, description="True for the dataset currently marked active.")
+    uploaded_at: datetime.datetime = Field(description="UTC timestamp when the dataset was uploaded.")
+    file_path: Optional[str] = Field(default=None, description="Server-side storage path for the uploaded file.")
+    preview_url: Optional[str] = Field(default=None, description="Preview endpoint for the dataset.")
+
+
+class DatasetListResponse(BaseModel):
+    datasets: list[DatasetMetadata] = Field(default_factory=list)
+    active_dataset_id: Optional[str] = Field(default=None)
+
+
+class DatasetUploadResponse(DatasetMetadata):
+    pass
+
+
+class DatasetPreviewResponse(BaseModel):
+    dataset_id: str
+    columns: list[str]
+    row_count: int
+    preview_rows: list[dict[str, object]] = Field(default_factory=list)

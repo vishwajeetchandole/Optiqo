@@ -169,7 +169,7 @@ export default function RiskOverview() {
       sortable: true,
       render: (val) => (
         <span className="font-mono text-xs font-bold text-muted bg-[var(--color-tint)] px-2 py-0.5 rounded-full">
-          #{row.rank}
+          #{val}
         </span>
       ),
     },
@@ -269,7 +269,7 @@ export default function RiskOverview() {
     {
       key: 'drivers',
       header: 'Key Metric Driver',
-      render: (val, row) => (
+      render: (val) => (
         <div className="flex items-center gap-2 text-xs">
           <span className="text-muted">{val.primaryDriver || 'No driver details provided'}</span>
         </div>

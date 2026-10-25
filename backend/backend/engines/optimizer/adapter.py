@@ -58,17 +58,11 @@ class OptimizerAdapter(OptimizerProtocol):
         rounded_allocations, rounding_loss = round_down_allocations(lp_result.allocations)
 
         # 3. Assemble shipment lines
-        lane_freights = dict(zip(
-            zip(lanes["warehouse_id"].astype(str), lanes["dest_id"].astype(str)),
-            pd.to_numeric(lanes["freight_rate"], errors="coerce").fillna(1.0)
-        ))
-
         shipment_lines = construct_shipment_lines(
             rounded_allocations=rounded_allocations,
             eligible_pairs_df=lp_result.eligible_pairs_df,
             batch_quantities=lp_result.batch_quantities,
             dest_capacity_rooms=lp_result.dest_capacity_rooms,
-            lane_freights=lane_freights,
         )
 
         # 4. Tabulate unmet demand and expiry

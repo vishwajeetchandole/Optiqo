@@ -34,6 +34,7 @@ import { ChartCard, ChartTooltip } from '@/components/shared/ChartCard'
 import { ProgressBar } from '@/components/shared/ProgressBar'
 import { Drawer } from '@/components/shared/Drawer'
 import { DataTable } from '@/components/shared/DataTable'
+import NetworkMapPanel from '@/components/distribution/NetworkMapPanel'
 import RecommendationDetail from '@/pages/RecommendationDetail'
 import { cn } from '@/lib/utils'
 
@@ -112,6 +113,7 @@ export default function DistributionPlan() {
   const loadPlan = useCallback(async () => {
     setLoading(true)
     setError(null)
+    setSelectedLineId(null)
     try {
       const res = await getDistributionPlan({ runId: initialRunId })
       setPlanData(res)
@@ -165,6 +167,12 @@ export default function DistributionPlan() {
   // Open line detail in slide-out drawer
   const handleRowClick = (row) => {
     setSelectedLineId(row.lineId)
+  }
+
+  const handleMapLineSelect = (lineId) => {
+    const lineIndex = planData?.lines.findIndex((line) => line.lineId === lineId) ?? -1
+    if (lineIndex >= 0) setPage(Math.floor(lineIndex / pageSize) + 1)
+    setSelectedLineId(lineId)
   }
 
   // Filter options derived from plan lines
@@ -793,6 +801,15 @@ export default function DistributionPlan() {
                 </PieChart>
               </ChartCard>
             </div>
+
+            {planData?.runId && (
+              <NetworkMapPanel
+                key={planData.runId}
+                runId={planData.runId}
+                selectedLineId={selectedLineId}
+                onSelectLine={handleMapLineSelect}
+              />
+            )}
 
             {/* ── Plan Lines Table Section ──────────────────────────────── */}
             <SectionCard

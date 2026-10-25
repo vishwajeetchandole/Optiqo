@@ -18,7 +18,8 @@ This repository branch (`front`) contains the React + Vite frontend for Optiqo /
 # Install dependencies
 npm install
 
-# Start local development server
+# Start the backend first in a separate terminal (see ../backend/LAUNCH.md).
+# Then, from this frontend directory, start the UI:
 npm run dev
 
 # Run unit / integration tests
@@ -35,7 +36,9 @@ npm run lint
 
 ## ⚙️ Environment Configuration
 
-Copy `.env.example` to `.env.local` to configure:
+The frontend requires the FastAPI backend to be running at
+`http://localhost:8000` unless you intentionally enable mock data. If you need
+to configure a different API URL, copy `.env.example` to `.env.local` and edit:
 
 ```env
 # Base URL for the backend REST API
@@ -53,6 +56,7 @@ VITE_USE_MOCKS=false
 - **Data Pre-flight Validation (`/validation`)**: Automated checks, input data sanity checks, and issue inspection drawer.
 - **Network Risk Analysis (`/risk`)**: Backend-ranked SKU-destination risks and reported exposure details.
 - **Distribution Plan (`/plan`, `/plan/:lineId`)**: Backend-generated transfer recommendations, verification results, line evidence, and sanitized CSV export.
+- **Distribution Network Map (P2 enhancement on `/plan`)**: Run-specific warehouse and destination data with optimizer allocation-flow indicators, risk/inventory details, filters, and optional browser-local coordinate mapping. The PRD classifies this map as a future enhancement; it does not change the MVP planning scope.
 - **Historical Backtesting (`/backtest`)**: Backend K1–K7 comparisons and K8 cost decomposition. Daily trajectories are not part of the current API contract.
 - **Solver Run Inspector (`/runs`)**: Persisted execution runs, run comparisons, plan CSV exports, and JSON manifests.
 

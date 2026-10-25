@@ -26,6 +26,7 @@ timeouts because they run the corresponding engine before returning.
 | Generate a dispatch plan | `POST /plan` | `origin_date`, `horizon_days` (1–28), optional solver parameters |
 | List stored runs | `GET /runs` | None |
 | Retrieve run manifest | `GET /runs/{run_id}` | None |
+| Retrieve run-specific network map data | `GET /runs/{run_id}/network` | None; `run_id` must identify a stored plan |
 | Export a run artifact | `GET /runs/{run_id}/export` | `format=csv|json`, `artifact=plan|risks|kpis` |
 | Run policy evaluation | `POST /backtest` | `seed`, `window_days` (7–112); optional `evaluation_start_date`, `dataset_path` |
 
@@ -42,6 +43,10 @@ date and parameter names listed above.
   raises an `ApiError` with HTTP status, backend error code, and message.
 - Run exports are returned by the backend as CSV or JSON content. CSV
   neutralization is performed server-side.
+- The optional P2 distribution map uses the selected plan run's dataset hash,
+  locations, inventory/risk summaries, and persisted shipment lines. Missing or
+  invalid dataset coordinates are returned as unplottable; the frontend does not
+  geocode locations or synthesize geographic positions.
 - Risk results do not include regional labels or numeric network deficits.
   Backtest results contain aggregate K1–K7 comparisons and K8 decomposition,
   not daily trajectories. The UI does not synthesize those missing values.

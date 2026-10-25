@@ -388,7 +388,9 @@ def _run_heuristic_policy(
                         batch["quantity"] = avail - alloc
                         remaining_to_ship -= alloc
                         u_vol = sku_lookup.get(s, {}).get("unit_volume", 1.0)
-                        freight_cost = round(alloc * u_vol * freight_rate, 2)
+                        freight_cost = round(
+                            alloc * u_vol * dist * freight_rate, 2
+                        )
 
                         shipment_lines.append({
                             "line_id": f"line_{line_counter:04d}",

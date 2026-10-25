@@ -471,7 +471,7 @@ class ConstraintVerifier(ConstraintVerifierProtocol):
             sub_elig = valid_elig[(valid_elig["dest_id"] == d_id) & (valid_elig["sku_id"] == s_id)]
             if not sub_elig.empty:
                 sorted_whs = (
-                    sub_elig.sort_values(by="freight_rate")["warehouse_id"]
+                    sub_elig.sort_values(by="unit_freight_cost")["warehouse_id"]
                     .drop_duplicates()
                     .tolist()[:lane_pruning_k]
                 )

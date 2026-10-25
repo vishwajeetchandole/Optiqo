@@ -201,7 +201,7 @@ class TestConstraintVerifierFaultInjection:
             {"dest_id": "DEST_01", "name": "Store 1", "type": "store", "region": "North", "storage_capacity": 10.0}
         ])
         lanes = pd.DataFrame([
-            {"warehouse_id": "WH_01", "origin_warehouse_id": "WH_01", "dest_id": "DEST_01", "transit_days": 2, "freight_rate": 2.0}
+            {"warehouse_id": "WH_01", "origin_warehouse_id": "WH_01", "dest_id": "DEST_01", "distance_km": 100, "transit_days": 2, "freight_rate": 2.0}
         ])
         batches = pd.DataFrame([
             {"batch_id": "B_01", "warehouse_id": "WH_01", "sku_id": "SKU_01", "quantity": 100, "production_date": "2024-01-01", "expiry_date": "2024-01-31", "location_type": "warehouse"}

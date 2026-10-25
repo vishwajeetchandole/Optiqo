@@ -76,7 +76,8 @@ def filter_eligible_lane_batches(
     Returns DataFrame with columns:
       warehouse_id, dest_id, batch_id, sku_id, quantity, expiry_date,
       transit_days, arrival_date, remaining_life_at_arrival, min_life_days,
-      is_eligible, freight_rate, unit_volume, unit_cost, unit_margin
+      is_eligible, freight_rate, distance_km, unit_freight_cost,
+      unit_volume, unit_cost, unit_margin
     """
     # 1. Filter warehouse batches
     wh_batches = batches_df[
@@ -105,7 +106,13 @@ def filter_eligible_lane_batches(
     sku_info = skus_df[available_sku_cols].copy()
 
     # 3. Merge batches with lanes on warehouse_id
-    lane_cols = ["warehouse_id", "dest_id", "transit_days", "freight_rate"]
+    lane_cols = [
+        "warehouse_id",
+        "dest_id",
+        "distance_km",
+        "transit_days",
+        "freight_rate",
+    ]
     if "blocked" in lanes_df.columns:
         lane_cols.append("blocked")
 
@@ -114,6 +121,10 @@ def filter_eligible_lane_batches(
 
     if pairs.empty:
         return pd.DataFrame()
+
+    pairs["unit_freight_cost"] = (
+        pairs["freight_rate"] * pairs["distance_km"] * pairs["unit_volume"]
+    )
 
     # 4. Compute arrival dates and remaining shelf life
     transit_series = pd.to_numeric(pairs["transit_days"], errors="coerce").fillna(1).astype(int)

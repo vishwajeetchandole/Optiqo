@@ -30,7 +30,7 @@ npx oxlint src
 | `/` | `Overview` | Live Dashboard, 4 summary metric cards, pipeline stepper, demand forecast chart, risk donut, top alerts. (PRD J1) |
 | `/validation` | `DataValidation` | Pre-flight sanity checks, findings table, slide-out drawer. (PRD J1, P0-01..03) |
 | `/risk` | `RiskOverview` | Backend-ranked SKU-destination pairs and only the risk evidence present in the response. (PRD J2, P0-07) |
-| `/plan` | `DistributionPlan` | Backend-generated transfer recommendations, checker results, plan lines, and sanitized run export. (PRD J3, P0-04..06, P0-11) |
+| `/plan` | `DistributionPlan` | Backend-generated transfer recommendations, checker results, plan lines, sanitized run export, and the explicitly scoped P2 distribution network map. (PRD J3, P0-04..06, P0-11) |
 | `/plan/:lineId` | `RecommendationDetail` | Backend explanation, forecast range, inventory, and shelf-life evidence. (PRD J4, P0-08) |
 | `/backtest` | `Backtesting` | Backend K1-K7 KPI comparison and K8 cost decomposition; daily trajectories are not in the API response. (PRD J5, P0-09) |
 | `/runs` | `RunDetails` | Solver execution logs, run comparison modal, CSV/JSON manifest downloads. (PRD J7) |
@@ -112,6 +112,7 @@ npx oxlint src
 | `optiqo_sidebar_collapsed` | `'true'` / `'false'` | `AppShell.jsx` / `Sidebar.jsx` |
 | `optiqo_datatable_density` | `'comfortable'` / `'compact'` | `DataTable.jsx` |
 | `optiqo_theme` | `'light'` / `'dark'` | `useTheme.js` |
+| `optiqo-map-coordinates:<dataset_hash>` | User-entered location coordinates | Distribution network map; browser-local and dataset-specific |
 
 ---
 
@@ -125,7 +126,7 @@ npx oxlint src
 | **Risk** | `/risk` | GET | Ready | Ranked alerts and shortage SKU IDs |
 | **Plan** | `/plan` | POST | Ready | Synchronous plan and checker result |
 | **Backtest** | `/backtest` | POST | Ready | Synchronous K1-K7 and K8 result |
-| **Runs** | `/runs`, `/runs/{run_id}` | GET | Ready | Run index and persisted manifest |
+| **Runs** | `/runs`, `/runs/{run_id}`, `/runs/{run_id}/network` | GET | Ready | Run index, persisted manifest, or selected plan's network map data |
 | **Export** | `/runs/{run_id}/export` | GET | Ready | Sanitized backend CSV/JSON artifact |
 
 ---
@@ -162,6 +163,10 @@ npx oxlint src
 2. Click a plan row to inspect its backend-provided evidence.
 3. Use **Columns** to toggle visible columns.
 4. Export CSV to download the sanitized backend artifact.
+5. Review the P2 network map for this run; filter optimizer shipment lines and
+   select a flow to open the matching recommendation detail.
+6. If the dataset has no valid coordinates, use the optional manual coordinate
+   mapping form with verified coordinates. Unmapped locations remain in the list.
 
 ### Journey J4: Recommendation Detail (`/plan/:lineId`)
 1. Open a line from the current plan and review its backend explanation and checker state.

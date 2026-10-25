@@ -24,6 +24,11 @@ from backend.data.synthetic_generator import generate_dataset
 from backend.main import app
 
 
+@pytest.fixture(autouse=True)
+def isolate_generated_backend_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(settings, "BASE_DIR", tmp_path)
+
+
 # ── Dataset fixtures ──────────────────────────────────────────────────────────
 
 @pytest.fixture(scope="session")

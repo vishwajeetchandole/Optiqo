@@ -78,3 +78,13 @@ Runs multi-cycle policy comparison.
 ### `GET /api/runs`
 
 Returns persisted planning / backtest runs.
+
+### `GET /api/runs/{run_id}/network`
+
+Returns map-ready location metadata, inventory and persisted pre-plan destination risk summaries,
+and shipment allocations from the specified stored planning run. The response
+includes both `run_id` and `dataset_hash`; the backend resolves the source
+dataset by the run's recorded hash and rejects unavailable or changed datasets.
+Coordinates are returned only when the matching warehouse or destination row
+contains valid latitude and longitude values. Missing and invalid coordinates
+are marked and are not inferred.

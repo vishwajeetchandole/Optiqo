@@ -99,6 +99,21 @@ def test_optimizer_solves_on_clean_data(clean_dataset_dir: Path):
     assert output.rounding_loss_units >= 0
     assert len(output.lines) > 0
 
+    lane_costs = ds.lanes.set_index(["warehouse_id", "dest_id"])
+    sku_volumes = ds.skus.set_index("sku_id")["unit_volume"]
+    for line in output.lines:
+        lane = lane_costs.loc[(line.warehouse_id, line.dest_id)]
+        unit_freight = (
+            float(lane["freight_rate"])
+            * float(lane["distance_km"])
+            * float(sku_volumes.loc[line.sku_id])
+        )
+        assert line.unit_freight_cost == pytest.approx(unit_freight)
+        assert line.total_freight_cost == pytest.approx(
+            round(unit_freight * line.quantity, 2)
+        )
+    assert any(line.total_freight_cost > 0 for line in output.lines)
+
     # ── Constraint C1 Verification: Batch Stock Availability ─────────────────
     batch_caps = dict(zip(usable_wh["batch_id"].astype(str), usable_wh["quantity"]))
     allocated_by_batch: dict[str, int] = {}

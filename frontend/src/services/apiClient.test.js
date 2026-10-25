@@ -55,7 +55,7 @@ describe('API client', () => {
     await expect(request).rejects.toBeInstanceOf(ApiError)
     await expect(request).rejects.toMatchObject({
       name: 'ApiError',
-      message: 'offline',
+      message: expect.stringContaining('Make sure the backend is running'),
       status: 0,
       code: 'NETWORK_ERROR',
     })

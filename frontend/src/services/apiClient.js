@@ -33,6 +33,8 @@ export async function request(path, options = {}) {
     headers: extraHeaders = {},
   } = options
 
+  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
+
   const url = new URL(`${BASE_URL}${path}`)
   if (query) {
     Object.entries(query).forEach(([key, value]) => {
@@ -44,7 +46,7 @@ export async function request(path, options = {}) {
     Accept: 'application/json',
     ...extraHeaders,
   }
-  if (body != null) headers['Content-Type'] = 'application/json'
+  if (body != null && !isFormData) headers['Content-Type'] = 'application/json'
 
   let token = null
   try {
@@ -63,15 +65,18 @@ export async function request(path, options = {}) {
     response = await fetch(url.toString(), {
       method,
       headers,
-      body: body != null ? JSON.stringify(body) : undefined,
+      body: body != null
+        ? (isFormData ? body : JSON.stringify(body))
+        : undefined,
       signal: controller.signal,
     })
   } catch (error) {
     if (controller.signal.aborted) {
       throw new ApiError('Request timed out', 408, 'TIMEOUT')
     }
+    const reason = error instanceof Error ? error.message : 'Network error'
     throw new ApiError(
-      error instanceof Error ? error.message : 'Network error',
+      `Unable to reach the Optiqo API at ${BASE_URL}. Make sure the backend is running and VITE_API_BASE_URL is correct. (${reason})`,
       0,
       'NETWORK_ERROR',
       error
@@ -113,5 +118,6 @@ export async function request(path, options = {}) {
 
 export const get = (path, options) => request(path, { ...options, method: 'GET' })
 export const post = (path, options) => request(path, { ...options, method: 'POST' })
+export const postForm = (path, formData, options = {}) => request(path, { ...options, method: 'POST', body: formData })
 export const put = (path, options) => request(path, { ...options, method: 'PUT' })
 export const del = (path, options) => request(path, { ...options, method: 'DELETE' })

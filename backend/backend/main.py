@@ -42,10 +42,16 @@ def create_app() -> FastAPI:
     )
 
     # ── CORS ─────────────────────────────────────────────────────────────────
-    # Origins are read from configuration — no hard-coded values here (Task 2 requirement)
+    # Configured origins are allowed everywhere; local Vite ports are dev-only.
+    dev_origin_regex = (
+        r"https?://(?:localhost|127\.0\.0\.1)(?::\d+)?"
+        if settings.APP_ENV.lower() == "development"
+        else None
+    )
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins_list,
+        allow_origin_regex=dev_origin_regex,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

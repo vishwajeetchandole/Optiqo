@@ -49,7 +49,6 @@ def construct_shipment_lines(
     eligible_pairs_df: pd.DataFrame,
     batch_quantities: dict[str, float],
     dest_capacity_rooms: dict[str, float],
-    lane_freights: dict[tuple[str, str], float],
 ) -> list[PlannedShipmentLine]:
     """
     Assemble PlannedShipmentLine items with economics, shelf life, and slack flags.
@@ -71,11 +70,11 @@ def construct_shipment_lines(
         pair_lookup[key] = row.to_dict()
 
         # Track freight costs per (dest, sku) across warehouses
-        fr = float(row.get("freight_rate", 1.0) or 1.0)
+        unit_freight = float(row["unit_freight_cost"])
         sd_key = (d_id, s_id)
         if sd_key not in wh_eligible_by_sku_dest:
             wh_eligible_by_sku_dest[sd_key] = []
-        wh_eligible_by_sku_dest[sd_key].append((w_id, fr))
+        wh_eligible_by_sku_dest[sd_key].append((w_id, unit_freight))
 
     # Compute batch total shipped units for batch_fully_allocated flag
     batch_shipped_total: dict[str, int] = {}
@@ -100,10 +99,7 @@ def construct_shipment_lines(
         arr_date = str(info.get("arrival_date", ""))
         rem_life = int(info.get("remaining_life_at_arrival", 0))
         min_life = int(info.get("min_life_days", 0))
-        fr_rate = float(info.get("freight_rate", 1.0) or 1.0)
-        vol = float(info.get("unit_volume", 1.0) or 1.0)
-
-        unit_freight = round(fr_rate * vol, 2)
+        unit_freight = float(info["unit_freight_cost"])
         total_freight = round(unit_freight * qty, 2)
 
         # Batch fully allocated check: total shipped >= batch stock
@@ -122,8 +118,8 @@ def construct_shipment_lines(
         ]
         if other_whs:
             other_whs.sort(key=lambda x: x[1])
-            next_wh, next_fr_rate = other_whs[0]
-            next_fr_cost = round(next_fr_rate * vol, 2)
+            next_wh, next_unit_freight_cost = other_whs[0]
+            next_fr_cost = next_unit_freight_cost
         else:
             next_wh = None
             next_fr_cost = None

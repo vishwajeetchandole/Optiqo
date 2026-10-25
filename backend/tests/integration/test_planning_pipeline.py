@@ -80,7 +80,7 @@ class TestPlanningPipelineAcceptance:
         # Summary & Metric O5: Supply-bound shortage
         summary = plan["summary"]
         assert summary["total_shipped_units"] >= 0
-        assert summary["total_freight_cost"] >= 0.0
+        assert summary["total_freight_cost"] > 0.0
         assert summary["supply_bound_unavoidable_shortage"] >= 0.0
         assert summary["allocation_caused_shortage"] >= 0.0
 
@@ -91,6 +91,9 @@ class TestPlanningPipelineAcceptance:
         # Metric O3: 100% Grounded Explanations
         plan_lines = plan["plan_lines"]
         assert len(plan_lines) > 0
+        assert summary["total_freight_cost"] == pytest.approx(
+            sum(line["freight_cost"] for line in plan_lines)
+        )
 
         for line in plan_lines:
             assert line["quantity"] > 0

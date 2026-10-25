@@ -388,6 +388,7 @@ def run_planning_cycle(
             "run_type": "PLAN",
             "origin_date": request.origin_date,
             "dataset_hash": compute_dataset_hash(data_dir),
+            "_dataset_path": str(data_dir.resolve()),
             "parameters": {
                 "origin_date": request.origin_date,
                 "horizon_days": request.horizon_days,
@@ -401,6 +402,7 @@ def run_planning_cycle(
             "checker_verdict": checker_status.model_dump(),
             "summary": summary.model_dump(),
             "plan_lines": [line.model_dump() for line in plan_line_items],
+            "risk_alerts": [alert.model_dump(mode="json") for alert in pre_risk.alerts],
             "available_artifacts": ["plan", "risks", "kpis"],
         }
         save_run(manifest_data)

@@ -15,13 +15,97 @@ Tests:
 from __future__ import annotations
 
 from pathlib import Path
+import uuid
 import pytest
 from fastapi.testclient import TestClient
 
-from backend.storage.repository import save_run
+from backend.storage.repository import compute_dataset_hash, save_run
 
 
 class TestRunsAPI:
+    def test_network_map_is_bound_to_plan_dataset_and_run(
+        self, clean_dataset_dir: Path, api_client: TestClient
+    ):
+        run_id = f"network_map_api_test_{uuid.uuid4().hex}"
+        run_file = save_run({
+            "run_id": run_id,
+            "run_type": "PLAN",
+            "origin_date": "2024-01-15",
+            "dataset_hash": compute_dataset_hash(clean_dataset_dir),
+            "_dataset_path": str(clean_dataset_dir.resolve()),
+            "parameters": {"horizon_days": 7},
+            "checker_verdict": {"passed": True},
+            "plan_lines": [{
+                "line_id": "network-line-1",
+                "warehouse_id": "WH_01",
+                "dest_id": "DEST_001",
+                "sku_id": "SKU_001",
+                "quantity": 25,
+                "freight_cost": 4.5,
+            }],
+            "risk_alerts": [{
+                "dest_id": "DEST_001",
+                "sku_id": "SKU_001",
+                "severity": "HIGH",
+                "financial_exposure": 12.0,
+                "days_of_cover": 2.0,
+                "expected_unmet_units": 5.0,
+                "unmet_share_pct": 20.0,
+                "expected_expiry_units": 0.0,
+                "expected_expiry_loss_cost": 0.0,
+                "excess_units": 0,
+                "is_supply_shortage": False,
+                "primary_driver": "Low cover.",
+            }],
+        })
+        try:
+            response = api_client.get(f"/api/runs/{run_id}/network")
+            assert response.status_code == 200
+            network = response.json()
+            manifest_response = api_client.get(f"/api/runs/{run_id}")
+            assert manifest_response.status_code == 200
+            manifest = manifest_response.json()
+            assert "_dataset_path" not in manifest
+            assert network["run_id"] == run_id
+            assert network["dataset_hash"] == manifest["dataset_hash"]
+            assert len(network["locations"]) == 44
+            assert all(location["coordinate_status"] == "missing" for location in network["locations"])
+            assert network["flows"] == [{
+                "line_id": "network-line-1",
+                "source_id": "WH_01",
+                "destination_id": "DEST_001",
+                "sku_id": "SKU_001",
+                "quantity": 25.0,
+                "freight_cost": 4.5,
+                "verification_status": "verified",
+            }]
+            destination = next(
+                location for location in network["locations"]
+                if location["id"] == "DEST_001"
+            )
+            assert destination["risk"] == {
+                "basis": "pre-plan",
+                "level": "HIGH",
+                "alert_count": 1,
+                "expected_unmet_units": 5.0,
+                "expected_expiry_units": 0.0,
+                "minimum_days_of_cover": 2.0,
+                "primary_drivers": ["Low cover."],
+            }
+        finally:
+            if run_file.exists():
+                run_file.unlink()
+
+    def test_network_map_rejects_backtest_run(self, api_client: TestClient):
+        run_id = "network_backtest_run"
+        save_run({
+            "run_id": run_id,
+            "run_type": "BACKTEST",
+            "dataset_hash": "hash123",
+        })
+        response = api_client.get(f"/api/runs/{run_id}/network")
+        assert response.status_code == 422
+
     def test_plan_persistence_and_retrieval(self, clean_dataset_dir: Path, api_client: TestClient):
         """Test POST /api/plan automatically creates a persisted run retrievable via GET /api/runs/{run_id}."""
         # 1. Execute plan

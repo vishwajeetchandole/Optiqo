@@ -15,27 +15,32 @@ React frontend -> FastAPI API -> validation/orchestration -> demo data / dataset
 
 ## Quick start
 
-### 1) Frontend
+The frontend uses the FastAPI backend for its data. Start the backend and
+frontend in separate terminals.
+
+### 1) Backend
 
 ```powershell
-cd frontend
+Set-Location backend
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+..\backend\.venv\Scripts\python.exe -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Keep this terminal running. The API health check is available at
+`http://localhost:8000/api/health`.
+
+### 2) Frontend
+```powershell
+Set-Location frontend
 npm install
-cp .env.example .env.local
+Copy-Item .env.example .env.local
 npm run dev
 ```
 
-The default frontend env is configured for the local backend at `http://localhost:8000/api` with mock responses disabled by default.
-
-### 2) Backend
-
-```powershell
-cd backend
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-$env:PYTHONPATH = "C:\Users\vishw\Downloads\Optiqo"
-python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
-```
+The default frontend config calls `http://localhost:8000/api` with mock
+responses disabled. If the backend is unreachable, check that its terminal is
+still running and that `VITE_API_BASE_URL` points to the correct API.
 
 ### 3) AI/ML module
 

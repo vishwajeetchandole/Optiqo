@@ -22,6 +22,12 @@ This project uses a deterministic synthetic demo dataset generated into `backend
 - Product identifiers and warehouse/destination IDs are string keys used across tables.
 - Shelf life and expiry values are measured in days.
 - Cost values are modeled as numeric amounts aligned to the optimization objective.
+- Optional `latitude` and `longitude` columns may be supplied for warehouses and destinations. Both values must be finite numbers within the geographic ranges (-90 to 90 and -180 to 180); absent or invalid coordinates are not inferred. The standard synthetic dataset does not persist geographic coordinates.
+
+The P2 distribution network map keeps locations without valid coordinates in
+its linked location list. Users may optionally enter verified coordinates in
+the map; these overrides are scoped to the dataset hash and saved only in the
+current browser. No geocoding requests are made.
 
 ## Validation rules
 

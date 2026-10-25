@@ -54,6 +54,11 @@ class Settings(BaseSettings):
         """Root directory for persisted run manifests and plan artefacts."""
         return self.backend_dir / "runs"
 
+    @property
+    def uploads_dir(self) -> Path:
+        """Root directory for uploaded user datasets."""
+        return self.backend_dir / "data" / "uploads"
+
     # ── Dataset generation ───────────────────────────────────────────────────
     DEFAULT_SEED: int = 42
     N_WAREHOUSES: int = 4
@@ -69,6 +74,7 @@ class Settings(BaseSettings):
     DEFAULT_HOLDING_COST_RATE: float = 0.02
     DEFAULT_LANE_PRUNING_K: int = 3
     DEFAULT_SOLVER_TIMEOUT_SECONDS: int = 60
+    MAX_UPLOAD_FILE_SIZE_BYTES: int = 25 * 1024 * 1024
 
     # ── Simulation ───────────────────────────────────────────────────────────
     EVAL_WINDOW_DAYS: int = 56  # 8 weekly dispatch cycles (PRD §7.1)

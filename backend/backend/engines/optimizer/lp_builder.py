@@ -143,8 +143,7 @@ def build_and_solve_lp(
     k_prune = config.lane_pruning_k
     pruned_rows = []
     for (d_id, s_id), group in eligible_df.groupby(["dest_id", "sku_id"]):
-        # Sort by freight_rate ascending
-        sorted_g = group.sort_values(by="freight_rate")
+        sorted_g = group.sort_values(by="unit_freight_cost")
         unique_whs = sorted_g["warehouse_id"].drop_duplicates().tolist()[:k_prune]
         pruned_rows.append(sorted_g[sorted_g["warehouse_id"].isin(unique_whs)])
 
@@ -252,10 +251,7 @@ def build_and_solve_lp(
 
     for (b_id, d_id) in pair_keys:
         info = pair_info_map[(b_id, d_id)]
-        s_id = str(info["sku_id"])
-        vol = sku_volumes.get(s_id, 1.0)
-        fr = float(info.get("freight_rate", 1.0) or 1.0)
-        unit_freight = fr * vol
+        unit_freight = float(info["unit_freight_cost"])
         get_var_idx(f"x__{b_id}__{d_id}", cost=unit_freight, lb=0.0)
 
     # Unique active (dest_id, sku_id) pairs

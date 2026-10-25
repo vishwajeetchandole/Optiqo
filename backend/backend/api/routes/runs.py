@@ -12,6 +12,8 @@ from fastapi import APIRouter, Query, Response
 from backend.core.exceptions import DataError
 from backend.core.logging import get_logger
 from backend.schemas.runs import RunManifest
+from backend.schemas.network_map import NetworkMapResponse
+from backend.services.network_map import get_network_map
 from backend.storage.exporter import export_run_artifact
 from backend.storage.repository import get_run, list_runs
 
@@ -46,6 +48,21 @@ def get_run_by_id(run_id: str) -> RunManifest:
     logger.info("Fetching run manifest: %s", run_id)
     run_dict = get_run(run_id)
     return RunManifest.model_validate(run_dict)
+
+
+@router.get(
+    "/runs/{run_id}/network",
+    response_model=NetworkMapResponse,
+    summary="Retrieve the dataset network and shipment flows for a plan run",
+    description=(
+        "Returns dataset locations, available inventory, persisted pre-plan destination risk summaries, "
+        "and shipment allocations from the specified plan run. Coordinates are null "
+        "when the dataset does not contain valid latitude and longitude values."
+    ),
+    tags=["Runs & Exports"],
+)
+def get_run_network(run_id: str) -> NetworkMapResponse:
+    return get_network_map(run_id)
 
 
 @router.get(
